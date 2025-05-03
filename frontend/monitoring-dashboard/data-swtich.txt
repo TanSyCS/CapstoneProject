@@ -1,0 +1,24 @@
+{
+    "opendaylight-port-statistics:flow-capable-node-connector-statistics": {
+        "bytes": {
+            "received": "936",
+            "transmitted": "8246"
+        },
+        "collision-count": "0",
+        "duration": {
+            "nanosecond": 634000000,
+            "second": 426
+        },
+        "packets": {
+            "received": "12",
+            "transmitted": "98"
+        },
+        "receive-crc-error": "0",
+        "receive-drops": "0",
+        "receive-errors": "0",
+        "receive-frame-error": "0",
+        "receive-over-run-error": "0",
+        "transmit-drops": "0",
+        "transmit-errors": "0"
+    }
+}
