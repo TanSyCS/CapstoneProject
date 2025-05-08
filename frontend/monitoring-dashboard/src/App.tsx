@@ -5,6 +5,7 @@ import DetailSwitch from './pages/Topology';
 import Topology from './pages/NewTopology';
 import SwitchRulesPage from './pages/SwitchRulesPage';
 import AlertPage from './pages/AlertPage';
+import ResponseTimePage from './pages/ResponseTimePage';
 
 const App = () => {
   const [page, setPage] = useState('topology');
@@ -19,6 +20,7 @@ const App = () => {
             <Route path="/new-topology" element={<Topology />} />
             <Route path="/switch/:id/rules" element={<SwitchRulesPage />} />
             <Route path="/alert" element={<AlertPage />} />
+            <Route path="/response-time" element={<ResponseTimePage />} />
           </Routes>
         </main>
       </div>

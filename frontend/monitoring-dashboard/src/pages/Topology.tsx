@@ -380,7 +380,7 @@ const DetailSwitch: React.FC = () => {
                                 >
                                   Xem
                                 </button>
-                              </td>
+                            </td>
                           </tr>
                         ))
                       ) : (

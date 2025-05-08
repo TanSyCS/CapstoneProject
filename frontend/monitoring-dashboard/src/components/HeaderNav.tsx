@@ -1,5 +1,5 @@
 import React from 'react';
-import { Server, AlertTriangle, Grid } from 'react-feather';
+import { Server, AlertTriangle, Grid, Clock } from 'react-feather';
 import { useNavigate } from 'react-router-dom';
 
 type HeaderNavProps = {
@@ -11,6 +11,7 @@ const NAVS = [
   { key: 'topology', label: 'Edit Rules', icon: Server, path: '/' },
   { key: 'new-topology', label: 'Topology', icon: Grid, path: '/new-topology' },
   { key: 'alert', label: 'Alert', icon: AlertTriangle, path: '/alert' },
+  { key: 'response-time', label: 'Response Time', icon: Clock, path: '/response-time' },
 ];
 
 const HeaderNav: React.FC<HeaderNavProps> = ({ current, onNavigate }) => {

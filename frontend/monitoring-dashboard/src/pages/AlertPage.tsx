@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { AlertData, subscribeToAlerts } from "../services/alertService";
+import { AlertData } from "../services/alertService";
 import { format } from "date-fns";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const AlertDetailModal: React.FC<{ alert: AlertData; onClose: () => void }> = ({ alert, onClose }) => (
   <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40" tabIndex={0} aria-modal="true" role="dialog" onClick={onClose}>
-    <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-lg relative" onClick={e => e.stopPropagation()}>
+    <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl relative overflow-x-auto" onClick={e => e.stopPropagation()}>
       <button className="absolute top-2 right-2 text-gray-500 hover:text-blue-600" aria-label="Close" onClick={onClose}>
         <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
@@ -33,11 +33,31 @@ const AlertPage: React.FC = () => {
   const [alerts, setAlerts] = useState<AlertData[]>([]);
   const [selectedAlert, setSelectedAlert] = useState<AlertData | null>(null);
 
+  // Sort alerts by timestamp descending (newest first)
+  const sortedAlerts = React.useMemo(() =>
+    [...alerts].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()),
+    [alerts]
+  );
+
   useEffect(() => {
-    const unsubscribe = subscribeToAlerts((data) => {
-      setAlerts((prev) => [data, ...prev].slice(0, 100));
-    });
-    return () => unsubscribe();
+    const eventSource = new EventSource("http://127.0.0.1:5000/api/alerts/get_all_alert");
+    eventSource.onmessage = (event) => {
+      try {
+        const data: AlertData = JSON.parse(event.data);
+        setAlerts(prev => {
+          const updated = [data, ...prev];
+          return updated.length > 100 ? updated.slice(0, 100) : updated;
+        });
+      } catch (err) {
+        // Optionally handle parse error
+      }
+    };
+    eventSource.onerror = () => {
+      eventSource.close();
+    };
+    return () => {
+      eventSource.close();
+    };
   }, []);
 
   const getSeverityColor = (severity: number) => {
@@ -74,7 +94,7 @@ const AlertPage: React.FC = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {alerts.map((alert, index) => (
+              {sortedAlerts.map((alert, index) => (
                 <tr key={`${alert.flow_id}-${index}`} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {format(new Date(alert.timestamp), 'HH:mm:ss')}

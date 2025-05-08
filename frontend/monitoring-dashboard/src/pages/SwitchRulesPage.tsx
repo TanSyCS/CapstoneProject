@@ -315,3 +315,4 @@ function RulesTableSkeleton() {
 }
 
 export default SwitchRulesPage;
+ 
